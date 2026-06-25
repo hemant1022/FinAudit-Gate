@@ -1,0 +1,7 @@
+langgraph
+unstructured
+chromadb
+yfinance
+transformers
+peft
+trl

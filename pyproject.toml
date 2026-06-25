@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finaudit-gate"
+version = "0.1.0"
+description = "Adaptive Multi-Agent Financial Portfolio & Risk Auditor with GRPO training"
+authors = [
+    {name = "Hemant", email = "hemant1022@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "langgraph",
+    "unstructured",
+    "chromadb",
+    "yfinance",
+    "transformers",
+    "peft",
+    "trl"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8"
+]
