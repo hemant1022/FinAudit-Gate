@@ -40,10 +40,14 @@ def build_vector_store(chunks):
 
 def query_vector_store(query: str, ticker: str = None, section: str = None, n_results: int = 3):
     client = get_chroma_client()
-    collection = client.get_collection(
-        name="financial_narratives",
-        embedding_function=sentence_transformer_ef
-    )
+    try:
+        collection = client.get_collection(
+            name="financial_narratives",
+            embedding_function=sentence_transformer_ef
+        )
+    except Exception as e:
+        print(f"[Vector Store] Collection not found or failed to load: {e}")
+        return {"documents": [[]]}
     
     where = {}
     if ticker:

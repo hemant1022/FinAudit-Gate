@@ -5,7 +5,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 from src.calculator_tools import get_metrics, calc_debt_to_equity, calc_current_ratio, calc_altman_z_score
 from src.agents.llm_client import ask_llm
 
-def run_analyst(ticker: str, year: int) -> str:
+def run_analyst(ticker: str, year: int, auditor_feedback: str = None) -> str:
     metrics = get_metrics(ticker, year)
     if not metrics:
         return f"No financial metrics found for {ticker} in {year}."
@@ -20,16 +20,28 @@ def run_analyst(ticker: str, year: int) -> str:
         "evaluating the company's financial health, liquidity, and solvency."
     )
     
+    de_ratio_str = f"{de_ratio:.2f}" if de_ratio is not None else "N/A"
+    current_ratio_str = f"{current_ratio:.2f}" if current_ratio is not None else "N/A"
+    z_score_str = f"{z_score:.2f}" if z_score is not None else "N/A"
+    
     user_prompt = (
         f"Analyze {ticker} for the year {year}.\n\n"
         f"Metrics:\n"
         f"- Total Assets: {metrics['total_assets']}\n"
         f"- Total Liabilities: {metrics['total_liabilities']}\n"
-        f"- Debt-to-Equity Ratio: {de_ratio:.2f} (Calculated)\n"
-        f"- Current Ratio: {current_ratio:.2f} (Calculated)\n"
-        f"- Altman Z-Score: {z_score:.2f} (Calculated)\n\n"
-        f"Provide a 1-paragraph summary of their financial health."
+        f"- Debt-to-Equity Ratio: {de_ratio_str} (Calculated)\n"
+        f"- Current Ratio: {current_ratio_str} (Calculated)\n"
+        f"- Altman Z-Score: {z_score_str} (Calculated)\n\n"
     )
+
+    if auditor_feedback:
+        user_prompt += (
+            f"PREVIOUS REPORT REJECTED BY AUDITOR. AUDITOR FEEDBACK:\n"
+            f"{auditor_feedback}\n\n"
+            f"Please revise your analysis to address the Auditor's feedback and avoid hallucinated numbers, missing metrics, or incorrect formatting.\n\n"
+        )
+    
+    user_prompt += "Provide a 1-paragraph summary of their financial health."
     
     print(f"--- Analyst Agent analyzing quantitative metrics for {ticker} ---")
     return ask_llm(system_prompt, user_prompt)

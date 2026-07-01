@@ -2,7 +2,7 @@ import os
 import yfinance as yf
 import sqlite3
 import pandas as pd
-from db_setup import get_db_path, init_db
+from src.db_setup import get_db_path, init_db
 
 def fetch_financial_data(ticker: str, year: int):
     stock = yf.Ticker(ticker)

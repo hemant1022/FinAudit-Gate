@@ -1,6 +1,6 @@
 import sqlite3
 import os
-from db_setup import get_db_path
+from src.db_setup import get_db_path
 
 def get_metrics(ticker: str, year: int):
     db_path = get_db_path()
